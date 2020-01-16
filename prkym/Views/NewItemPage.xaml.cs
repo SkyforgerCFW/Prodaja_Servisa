@@ -21,8 +21,8 @@ namespace prkym.Views
 
             Item = new Item
             {
-                Text = "Item name",
-                Description = "This is an item description."
+                Text = "Ime",
+                Description = "Opis"
             };
 
             BindingContext = this;

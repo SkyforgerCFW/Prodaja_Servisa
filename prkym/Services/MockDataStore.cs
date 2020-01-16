@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using prkym.Models;
-using prkym.Controllers;
 
 namespace prkym.Services
 {
     public class MockDataStore : IDataStore<Item>
     {
         readonly List<Item> items;
+        DataBase ebe = new DataBase();
 
         public MockDataStore()
         {
-            DBController ebe = new DBController();
+            ebe.ListServices();
             String[] opis = ebe.Opis;
             String[] ime = ebe.Ime_Servisa;
             items = new List<Item>();
@@ -32,6 +32,7 @@ namespace prkym.Services
         public async Task<bool> AddItemAsync(Item item)
         {
             items.Add(item);
+            ebe.AddService(item.Text, item.Description);
 
             return await Task.FromResult(true);
         }

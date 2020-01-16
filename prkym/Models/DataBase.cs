@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
-namespace prkym.Controllers
+namespace prkym.Models
 {
-    public class DBController
+    public class DataBase
     {
         //String[] ime_servisa = new String[1389];
         //String[] opis = new String[1389];
@@ -24,7 +24,7 @@ namespace prkym.Controllers
         //    while (rdr.Read())
         //    {
         //        if (rdr["service"].ToString() != pr)
-        //        {
+        //        {‘
         //            ime_servisa[i++] = rdr["desc_se"].ToString();
         //            opis[j++] = rdr["desc_sc"] + " " + rdr["price"] + " RSD";
         //            pr = rdr["service"].ToString();
@@ -43,26 +43,29 @@ namespace prkym.Controllers
         //}
         readonly List<string> ime_servisa = new List<string>();
         readonly List<string> opis = new List<string>();
-        public DBController()
+
+        const String connString = "Server=remotemysql.com;Port=3306;Uid=F3B1HGDzLU;Pwd=FEbHnRWLzi;Database=F3B1HGDzLU";
+        readonly MySqlConnection mySqlConnection = new MySqlConnection(connString);
+
+        public void ListServices()
         {
             try
             {
-                var connString = "Server=remotemysql.com;Port=3306;Uid=638t2K8utb;Pwd=m6V2OxUk2y;Database=638t2K8utb";
-                MySqlConnection mySqlConnection = new MySqlConnection(connString);
-                var sql = "select * from subcats left join services on subcats.service=services.service;";
+                //var sql = "select * from subcats left join services on subcats.service=services.service;";
+                var sql = "select * from services";
                 MySqlCommand mySqlCommand = new MySqlCommand(sql, mySqlConnection);
                 mySqlConnection.Open();
                 MySqlDataReader rdr = mySqlCommand.ExecuteReader();
                 rdr.Read();
                 String pr = rdr["service"].ToString();
                 ime_servisa.Add(rdr["desc_se"].ToString());
-                opis.Add(rdr["desc_sc"] + " " + rdr["price"] + " RSD");
+                //opis.Add(rdr["desc_sc"] + " " + rdr["price"] + " RSD");
                 while (rdr.Read())
                 {
                     if (rdr["service"].ToString() != pr)
                     {
                         ime_servisa.Add(rdr["desc_se"].ToString());
-                        opis.Add(rdr["desc_sc"] + " " + rdr["price"] + " RSD");
+                        //opis.Add(rdr["desc_sc"] + " " + rdr["price"] + " RSD");
                         pr = rdr["service"].ToString();
                     }
                     else
@@ -72,7 +75,28 @@ namespace prkym.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("'" + ex.Message + "' JE NAS PROBLEM");
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public bool AddService(String service, String desc_se)
+        {
+            try
+            {
+                bool res;
+                var sql = "INSERT INTO services (service, desc_se) VALUES ('" + service + "', '" + desc_se +"')";
+                MySqlCommand mySqlCommand = new MySqlCommand(sql, mySqlConnection);
+                mySqlConnection.Open();
+                if (mySqlCommand.ExecuteNonQuery() == 0) res = false;
+                else res = true;
+                mySqlConnection.Close();
+                return res;
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
             }
         }
 
