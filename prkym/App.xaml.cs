@@ -9,6 +9,8 @@ namespace prkym
 {
     public partial class App : Application
     {
+        public static Theme AppTheme { get; set; }
+
         public App()
         {
             InitializeComponent();
@@ -28,5 +30,11 @@ namespace prkym
         protected override void OnResume()
         {
         }
+    }
+
+    public enum Theme
+    {
+        Light,
+        Dark
     }
 }

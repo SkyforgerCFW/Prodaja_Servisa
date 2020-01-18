@@ -3,14 +3,12 @@
     <ContentPage.BindingContext>
         <vm:AboutViewModel />
     </ContentPage.BindingContext>
-    <ContentPage.Resources>
+    <!--<ContentPage.Resources>
         <ResourceDictionary>
-            <Color x:Key="Primary">#2196F3</Color>
-            <Color x:Key="Accent">#96d1ff</Color>
-            <Color x:Key="LightTextColor">#999999</Color>
+            
         </ResourceDictionary>
-    </ContentPage.Resources>
-    <Grid>
+    </ContentPage.Resources>-->
+    <Grid BackgroundColor="{DynamicResource BgColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -24,7 +22,7 @@
         </StackLayout>
         <ScrollView Grid.Row="1">
             <StackLayout Orientation="Vertical" Padding="16,40,16,40" Spacing="10">
-                <Label FontSize="22">
+                <Label FontSize="22" TextColor="{DynamicResource TextColor}">
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
@@ -35,7 +33,7 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Label>
+                <Label TextColor="{DynamicResource TextColor}">
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
@@ -46,7 +44,7 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Label>
+                <Label TextColor="{DynamicResource TextColor}">
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
@@ -64,7 +62,7 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Button Margin="0,10,0,0" Text="GitHub Repo" Command="{Binding OpenWebCommand}" BackgroundColor="{StaticResource Primary}" TextColor="White" />
+                <Button Margin="0,10,0,0" Text="GitHub Repo" Command="{Binding OpenWebCommand}" BackgroundColor="{StaticResource NavigationPrimary}" TextColor="White" />
             </StackLayout>
         </ScrollView>
     </Grid>

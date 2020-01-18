@@ -5,10 +5,10 @@
         <ToolbarItem Text="Save" Clicked="Save_Clicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout Spacing="20" Padding="15">
-            <Label Text="Servis" FontSize="Medium" />
+        <StackLayout Spacing="20" Padding="15" BackgroundColor="{DynamicResource BgColor}">
+            <Label Text="Servis" TextColor="{DynamicResource TextColor}" FontSize="Medium" />
             <Entry Text="{Binding Item.Text}" d:Text="Ime" FontSize="Small" />
-            <Label Text="Opis Servisa" FontSize="Medium" />
+            <Label Text="Opis Servisa" TextColor="{DynamicResource TextColor}" FontSize="Medium" />
             <Entry Text="{Binding Item.Description}" d:Text="Opis" FontSize="Small" />
         </StackLayout>
     </ContentPage.Content>

@@ -13,9 +13,9 @@
                                       CommandParameter="{Binding .}"
                                       Text="Obriši" IsDestructive="True"/>
                         </ViewCell.ContextActions>
-                        <StackLayout Padding="10">
-                            <Label Text="{Binding Text}" d:Text="{Binding .}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
-                            <Label Text="{Binding Description}" d:Text="Item description" LineBreakMode="NoWrap" Style="{DynamicResource ListItemDetailTextStyle}" FontSize="13" />
+                        <StackLayout Padding="10" BackgroundColor="{DynamicResource BgColor}">
+                            <Label Text="{Binding Text}" d:Text="{Binding .}" TextColor="{DynamicResource TextColor}" LineBreakMode="NoWrap" FontSize="16" />
+                            <Label Text="{Binding Description}" d:Text="Item description" TextColor="{DynamicResource TextColor}" LineBreakMode="NoWrap" FontSize="13" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
