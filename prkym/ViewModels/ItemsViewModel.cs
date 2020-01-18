@@ -25,9 +25,14 @@ namespace prkym.ViewModels
             {
                 var newItem = item as Item;
                 await DataStore.AddItemAsync(newItem);
-                newItem.Text = newItem.Description;
-                newItem.Description = "Kategorija";
                 Items.Add(newItem);
+            });
+
+            MessagingCenter.Subscribe<ItemsPage, Item>(this, "DeleteItem", async (obj, item) =>
+            {
+                var oldItem = item as Item;
+                await DataStore.DeleteItemAsync(oldItem.Id);
+                Items.Remove(oldItem);
             });
         }
 

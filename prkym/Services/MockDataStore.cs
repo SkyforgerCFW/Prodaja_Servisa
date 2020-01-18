@@ -2,39 +2,56 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 using prkym.Models;
 
 namespace prkym.Services
 {
     public class MockDataStore : IDataStore<Item>
     {
-        readonly List<Item> items;
-        DataBase ebe = new DataBase();
+        List<Item> items;
 
-        public MockDataStore()
+        const string connString = "Server=remotemysql.com;Port=3306;Uid=F3B1HGDzLU;Pwd=FEbHnRWLzi;Database=F3B1HGDzLU";
+        readonly static MySqlConnection conn = new MySqlConnection(connString);
+        MySqlCommand cmd = new MySqlCommand(null, conn);
+
+        public void ListServices()
         {
-            ebe.ListServices();
-            String[] opis = ebe.Opis;
-            String[] ime = ebe.Ime_Servisa;
-            items = new List<Item>();
-            foreach (String imeee in ime) {
-                items.Add(new Item { Id = Guid.NewGuid().ToString(), Text = imeee, Description = "Kategorija" });
+            try
+            {
+                items = new List<Item>();
+                cmd.CommandText = "select * from services";
+                conn.Open();
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    items.Add(new Item { Id = int.Parse(rdr["id"].ToString()), Text = rdr["service"].ToString(), Description = rdr["desc_se"].ToString() });
+                }
+                conn.Close();
             }
-                //new Item { Id = Guid.NewGuid().ToString(), Text = "First item", Description = "This is an item description." },
-                //new Item { Id = Guid.NewGuid().ToString(), Text = "Second item", Description = "This is an item description." } };
-                //new Item { Id = Guid.NewGuid().ToString(), Text = "Third item", Description="This is an item description." },
-                //new Item { Id = Guid.NewGuid().ToString(), Text = "Fourth item", Description="This is an item description." },
-                //new Item { Id = Guid.NewGuid().ToString(), Text = "Fifth item", Description="This is an item description." },
-                //new Item { Id = Guid.NewGuid().ToString(), Text = "Sixth item", Description="This is an item description." }
-            
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public async Task<bool> AddItemAsync(Item item)
         {
-            items.Add(item);
-            ebe.AddService(item.Text, item.Description);
-
-            return await Task.FromResult(true);
+            try
+            {
+                cmd.CommandText = "INSERT INTO services (service, desc_se) VALUES ('" + item.Text + "', '" + item.Description + "'); SELECT LAST_INSERT_ID()";
+                conn.Open();
+                var res = cmd.ExecuteScalar();
+                item.Id = int.Parse(res.ToString());
+                items.Add(item);
+                conn.Close();
+                return res != null ? await Task.FromResult(true) : await Task.FromResult(false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return await Task.FromResult(false);
+            }
         }
 
         public async Task<bool> UpdateItemAsync(Item item)
@@ -46,21 +63,35 @@ namespace prkym.Services
             return await Task.FromResult(true);
         }
 
-        public async Task<bool> DeleteItemAsync(string id)
+        public async Task<bool> DeleteItemAsync(int id)
         {
-            var oldItem = items.Where((Item arg) => arg.Id == id).FirstOrDefault();
-            items.Remove(oldItem);
-
-            return await Task.FromResult(true);
+            try
+            {
+                bool res;
+                cmd.CommandText = "DELETE FROM services WHERE services.id = " + id;
+                conn.Open();
+                if (cmd.ExecuteNonQuery() == 0) res = false;
+                else res = true;
+                conn.Close();
+                var oldItem = items.Where((Item arg) => arg.Id == id).FirstOrDefault();
+                if (res == true) items.Remove(oldItem);
+                return await Task.FromResult(res);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return await Task.FromResult(false);
+            }
         }
 
-        public async Task<Item> GetItemAsync(string id)
+        public async Task<Item> GetItemAsync(int id)
         {
             return await Task.FromResult(items.FirstOrDefault(s => s.Id == id));
         }
 
         public async Task<IEnumerable<Item>> GetItemsAsync(bool forceRefresh = false)
         {
+            ListServices();
             return await Task.FromResult(items);
         }
     }

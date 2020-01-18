@@ -51,5 +51,12 @@ namespace prkym.Views
             if (viewModel.Items.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
         }
+
+        public void OnDelete(object sender, EventArgs e)
+        {
+            var mi = ((MenuItem)sender).CommandParameter as Item;
+            MessagingCenter.Send(this, "DeleteItem", mi);
+            //DisplayAlert("Delete Context Action", mi.Text + " delete context action", "OK");
+        }
     }
 }
