@@ -56,11 +56,21 @@ namespace prkym.Services
 
         public async Task<bool> UpdateItemAsync(Item item)
         {
-            var oldItem = items.Where((Item arg) => arg.Id == item.Id).FirstOrDefault();
-            items.Remove(oldItem);
-            items.Add(item);
-
-            return await Task.FromResult(true);
+            try
+            {
+                bool res;
+                cmd.CommandText = "UPDATE services SET service = '" + item.Text + "', desc_se = '" + item.Description + "' WHERE services.id = " + item.Id;
+                conn.Open();
+                if (cmd.ExecuteNonQuery() == 0) res = false;
+                else res = true;
+                conn.Close();
+                return await Task.FromResult(res);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return await Task.FromResult(false);
+            }
         }
 
         public async Task<bool> DeleteItemAsync(int id)

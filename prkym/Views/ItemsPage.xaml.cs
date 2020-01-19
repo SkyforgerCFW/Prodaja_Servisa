@@ -52,11 +52,19 @@ namespace prkym.Views
                 viewModel.LoadItemsCommand.Execute(null);
         }
 
-        public void OnDelete(object sender, EventArgs e)
+        async void OnUpdate(object sender, EventArgs e)
         {
-            var mi = ((MenuItem)sender).CommandParameter as Item;
-            MessagingCenter.Send(this, "DeleteItem", mi);
-            //DisplayAlert("Delete Context Action", mi.Text + " delete context action", "OK");
+            Item item = ((MenuItem)sender).CommandParameter as Item;
+            if (item == null) return;
+
+            await Navigation.PushAsync(new EditPage(item));
+        }
+
+        void OnDelete(object sender, EventArgs e)
+        {
+            Item item = ((MenuItem)sender).CommandParameter as Item;
+            MessagingCenter.Send(this, "DeleteItem", item);
+            //DisplayAlert("Delete Context Action", item.Text + " delete context action", "OK");
         }
     }
 }

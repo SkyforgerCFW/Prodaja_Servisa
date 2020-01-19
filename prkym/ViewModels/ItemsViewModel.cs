@@ -7,6 +7,7 @@ using Xamarin.Forms;
 
 using prkym.Models;
 using prkym.Views;
+using System.Linq;
 
 namespace prkym.ViewModels
 {
@@ -23,16 +24,22 @@ namespace prkym.ViewModels
 
             MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
             {
-                var newItem = item as Item;
+                Item newItem = item as Item;
                 await DataStore.AddItemAsync(newItem);
                 Items.Add(newItem);
             });
 
             MessagingCenter.Subscribe<ItemsPage, Item>(this, "DeleteItem", async (obj, item) =>
             {
-                var oldItem = item as Item;
+                Item oldItem = item as Item;
                 await DataStore.DeleteItemAsync(oldItem.Id);
                 Items.Remove(oldItem);
+            });
+
+            MessagingCenter.Subscribe<EditPage, Item>(this, "EditItem", async (obj, item) =>
+            {
+                await DataStore.UpdateItemAsync(item);
+                ExecuteLoadItemsCommand();
             });
         }
 

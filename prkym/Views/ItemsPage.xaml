@@ -9,6 +9,9 @@
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.ContextActions>
+                            <MenuItem Clicked="OnUpdate"
+                                      CommandParameter="{Binding .}"
+                                      Text="Izmeni"/>
                             <MenuItem Clicked="OnDelete"
                                       CommandParameter="{Binding .}"
                                       Text="Obriši" IsDestructive="True"/>
